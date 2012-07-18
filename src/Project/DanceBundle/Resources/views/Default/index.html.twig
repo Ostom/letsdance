@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <title>{% block title %}Hello{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('letsdance/static/css/main.css') }}"/>
 </head>
 <body>
 	
 	
    <table width="100%" border="0" cellspacing="0" cellpadding="4">
     <tr class = "top_link">		
-		<td><img src="{{ asset('bundles/letsdance/media/img/logo.png') }}" /></td>
+		<td><img src="{{ asset('letsdance/media/img/logo.png') }}" /></td>
 		<td><h1>Hello =) </h1></td>
 	</tr>
 	</table>
