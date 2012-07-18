@@ -1,5 +1,14 @@
-Hello 
-<ul>
-{{ app.user.username }}
-</ul>
-!
+{% extends "ProjectDanceBundle:Default:index.html.twig" %}
+
+{% block title %}
+	Hello 
+	{{ app.user.username }}
+	!
+{% endblock %}
+
+{% block content %}
+	<h1>
+		Hello {{ app.user.username }} !
+	</h1>
+{% endblock %}
+

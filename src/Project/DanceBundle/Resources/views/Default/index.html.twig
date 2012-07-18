@@ -1,1 +1,36 @@
-Hello {{ name }}!
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>{% block title %}Hello{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+</head>
+<body>
+	
+	
+   <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr class = "top_link">		
+		<td><img src="{{ asset('bundles/letsdance/media/img/logo.png') }}" /></td>
+		<td><h1>Hello =) </h1></td>
+	</tr>
+	</table>
+	<table  width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr >
+		<td>
+			{% block content %}
+			
+				<h1> Hello {{ name }}! </h1>
+								
+			{% endblock %}
+		</td>
+    </tr>
+   <tr><td> 
+		{% block footer %}
+		<p>Thanks for visiting this site.</p>
+		{% endblock %}
+    </td></tr> 
+    </table>
+</body>
+</html>
+
+
+
