@@ -2,6 +2,9 @@ ProjectDanceBundle:
     resource: "@ProjectDanceBundle/Controller/"
     type:     annotation
     prefix:   /dance
+main:
+    pattern: /dance
+    
     
 login:
     pattern: /login

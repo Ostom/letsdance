@@ -16,10 +16,18 @@
 	<table  width="100%" border="0" cellspacing="0" cellpadding="4">
     <tr >
 		<td>
+			<h3>Choose the page:</h3>
+			<ul>
+				<li><a href = "{{ path('main') }}/hello">Main page</a></li>
+				<li><a href = "{{ path('main') }}/room">Your own room</a></li>
+				<li><a href = "{{ path('login') }}">Login page</a></li>
+			</ul>
+		</td>
+		<td>
 			{% block content %}
 			
 				<h1> Hello {{ name }}! </h1>
-								
+							I glad to see you from this awesom place!	
 			{% endblock %}
 		</td>
     </tr>

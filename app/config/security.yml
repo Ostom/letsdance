@@ -19,6 +19,6 @@ security:
                 path: /logout
                 target: /project/hello
     access_control:
-        - { path: ^/dance/, roles: ROLE_QQQ }
+        - { path: ^/dance/, roles: ROLE_USER }
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
