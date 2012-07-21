@@ -1,3 +1,8 @@
+ProjectDataBundle:
+    resource: "@ProjectDataBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 ProjectDanceBundle:
     resource: "@ProjectDanceBundle/Controller/"
     type:     annotation

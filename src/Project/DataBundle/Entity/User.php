@@ -1,0 +1,186 @@
+<?php
+// src/Project/DataBundle/Entity/Users.php
+namespace Project\DataBundle\Entity;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+* @ORM\Entity
+*/
+class User implements UserInterface
+{
+	/**
+	* @ORM\Id
+	* @ORM\Column(type="integer")
+	* @ORM\GeneratedValue(strategy="AUTO")
+	*/
+	protected $id;
+	/**
+	* @ORM\Column(type="string", length="255")
+	*/
+	protected $username;
+	/**
+	* @ORM\Column(type="string", length="255")
+	*/
+	protected $password;
+	/**
+	* @ORM\Column(type="array")
+	*/
+	protected $roles;
+	
+	/**
+	* @ORM\Column(type="text", nullable="true")
+	*/
+	protected $info;
+	/**
+	* @ORM\Column(type="string", length="255", nullable="true")
+	*/
+	protected $skype;
+	/**
+	* @ORM\Column(type="integer", nullable="true")
+	*/
+	protected $icq;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param string $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return string 
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set info
+     *
+     * @param text $info
+     */
+    public function setInfo($info)
+    {
+        $this->info = $info;
+    }
+
+    /**
+     * Get info
+     *
+     * @return text 
+     */
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    /**
+     * Set skype
+     *
+     * @param string $skype
+     */
+    public function setSkype($skype)
+    {
+        $this->skype = $skype;
+    }
+
+    /**
+     * Get skype
+     *
+     * @return string 
+     */
+    public function getSkype()
+    {
+        return $this->skype;
+    }
+
+    /**
+     * Set icq
+     *
+     * @param integer $icq
+     */
+    public function setIcq($icq)
+    {
+        $this->icq = $icq;
+    }
+
+    /**
+     * Get icq
+     *
+     * @return integer 
+     */
+    public function getIcq()
+    {
+        return $this->icq;
+    }
+    public function equals(UserInterface $user){
+		if ($this->username == $user->username) return true;
+		else return false;
+	}
+	
+    public function eraseCredentials(){
+		return NULL;
+	}
+    public function getSalt(){
+		return '';
+	}
+    
+}

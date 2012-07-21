@@ -27,9 +27,7 @@ class DefaultController extends Controller
      */
     public function roomAction($name = Null)
     {       
-        
 		$cookies = $this->container->get('security.context')->getToken()->getUser();
-		
         return array('cookies' => $cookies);//get(SecurityContext::LAST_USERNAME));
     }
     
