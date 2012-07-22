@@ -1,14 +1,13 @@
 {% extends "ProjectDanceBundle:Default:index.html.twig" %}
 
 {% block title %}
-	Hello 
-	{{ app.user.username }}
-	!
+	Hello 	{{ user.getUsername()}} !
 {% endblock %}
 
 {% block content %}
+	<img src = "{{ img }}"/>
 	<h1>
-		Hello {{ app.user.username }} !
+		Hello {{ user.getUsername() }} !
 	</h1>
 {% endblock %}
 

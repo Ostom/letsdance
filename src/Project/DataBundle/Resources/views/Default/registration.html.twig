@@ -1,14 +1,16 @@
-{% extends "ProjectDanceBundle:Default:index.html.twig" %}
 
-{% block title %}
-	Hello 
-	{{ user }}
-	!
-{% endblock %}
+{% if error is defined %}
+<div>{{ error.message }} </div>
+{% endif %}
 
-{% block content %}
-	<h1>
-		Hello {{ user }} !
-	</h1>
-{% endblock %}
+<div>{{ name }}</div>
 
+
+<form action="{{ path('register') }} " method="post" enctype="multipart/form-data">
+	<label for="username">Username:</label>
+	<input type="text" id="username" name="_username" />
+	<label for="password">Password:</label>
+	<input type="password" id="password" name="_password" />
+    <input type="file" name="filename"><br> 
+	<input type = "submit" />
+</form>

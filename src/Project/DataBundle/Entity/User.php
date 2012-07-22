@@ -36,6 +36,10 @@ class User implements UserInterface
 	/**
 	* @ORM\Column(type="string", length="255", nullable="true")
 	*/
+	protected $img;
+	/**
+	* @ORM\Column(type="string", length="255", nullable="true")
+	*/
 	protected $skype;
 	/**
 	* @ORM\Column(type="integer", nullable="true")
@@ -183,4 +187,24 @@ class User implements UserInterface
 		return '';
 	}
     
+
+    /**
+     * Set img
+     *
+     * @param string $img
+     */
+    public function setImg($img)
+    {
+        $this->img = $img;
+    }
+
+    /**
+     * Get img
+     *
+     * @return string 
+     */
+    public function getImg()
+    {
+        return $this->img;
+    }
 }

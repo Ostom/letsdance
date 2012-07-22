@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\SecurityContext;
 
+
 class DefaultController extends Controller
 {
     /**
@@ -27,8 +28,13 @@ class DefaultController extends Controller
      */
     public function roomAction($name = Null)
     {       
-		$cookies = $this->container->get('security.context')->getToken()->getUser();
-        return array('cookies' => $cookies);//get(SecurityContext::LAST_USERNAME));
+		$c = $this->container->get('security.context')->getToken()->getUser();
+		$em = $this->getDoctrine()->getEntityManager();
+		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+		$patch = $user->getImg();
+		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
+        echo($patch);
+        return array('user' => $user, 'img' => $patch );//get(SecurityContext::LAST_USERNAME));
     }
     
     /**
