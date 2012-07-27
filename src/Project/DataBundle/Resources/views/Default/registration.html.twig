@@ -11,6 +11,11 @@
 	<input type="text" id="username" name="_username" />
 	<label for="password">Password:</label>
 	<input type="password" id="password" name="_password" />
-    <input type="file" name="filename"><br> 
+    <input type="file" name="filename"><br/> 
+    
+    <label for="username">Dacetypes:</label><br/>
+	{% for type in dancetypes %}
+		<input type="radio"  name="_typedance"  value = "{{ type.getId() }}" /> {{ type.getTitle() }}<br/>
+	{% endfor %}
 	<input type = "submit" />
 </form>

@@ -45,6 +45,11 @@ class User implements UserInterface
 	* @ORM\Column(type="integer", nullable="true")
 	*/
 	protected $icq;
+	/**
+	* @ORM\ManyToOne(targetEntity="Dancetype", inversedBy="users")
+	* @ORM\JoinColumn(name="dancetype_id", referencedColumnName="id")
+	*/
+	protected $dancetype;
 
     /**
      * Get id
@@ -165,6 +170,7 @@ class User implements UserInterface
     {
         $this->icq = $icq;
     }
+    
 
     /**
      * Get icq
@@ -206,5 +212,50 @@ class User implements UserInterface
     public function getImg()
     {
         return $this->img;
+    }
+    
+    public function __construct()
+    {
+        $this->dancetypes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add dancetypes
+     *
+     * @param Project\DataBundle\Entity\Dancetype $dancetypes
+     */
+    public function addDancetype(\Project\DataBundle\Entity\Dancetype $dancetypes)
+    {
+        $this->dancetypes[] = $dancetypes;
+    }
+
+    /**
+     * Get dancetypes
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getDancetypes()
+    {
+        return $this->dancetypes;
+    }
+
+    /**
+     * Set dancetype
+     *
+     * @param Project\DataBundle\Entity\Dancetype $dancetype
+     */
+    public function setDancetype(\Project\DataBundle\Entity\Dancetype $dancetype)
+    {
+        $this->dancetype = $dancetype;
+    }
+
+    /**
+     * Get dancetype
+     *
+     * @return Project\DataBundle\Entity\Dancetype 
+     */
+    public function getDancetype()
+    {
+        return $this->dancetype;
     }
 }

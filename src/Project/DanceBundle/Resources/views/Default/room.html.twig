@@ -8,6 +8,8 @@
 	<img src = "{{ img }}"/>
 	<h1>
 		Hello {{ user.getUsername() }} !
+		<br/>
+		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!
 	</h1>
 {% endblock %}
 
