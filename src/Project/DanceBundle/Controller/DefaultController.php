@@ -32,6 +32,7 @@ class DefaultController extends Controller
 		$em = $this->getDoctrine()->getEntityManager();
 		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 		$patch = $user->getImg();
+		$patch = str_replace( '\\', '/', $patch);
 		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
         echo($patch);
         return array('user' => $user, 'img' => $patch );//get(SecurityContext::LAST_USERNAME));
