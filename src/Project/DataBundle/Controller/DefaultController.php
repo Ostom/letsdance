@@ -97,26 +97,5 @@ class DefaultController extends Controller
 		}
 		return array('dance' => $responce);
 	}
-	 /**
-     * @Route("/isdance")
-     * @Template()
-     */
-    public function isdanceAction(){
-		$em = $this->getDoctrine()->getEntityManager();
-		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername('hhh');
-		$a = $user->getDancetype();
-		echo($a->getTitle());
-		return array('dance' => $a);
-	}
-	/**
-     * @Route("/isuser")
-     * @Template()
-     */
-    public function isuserAction(){
-		$em = $this->getDoctrine()->getEntityManager();
-		$dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
-		$a = $dance->getUser();
-		//echo($a[0]);
-		return array('dance' => $a);
-	}
+
 }
