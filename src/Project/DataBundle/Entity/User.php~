@@ -50,6 +50,16 @@ class User implements UserInterface
 	* @ORM\JoinColumn(name="dancetype_id", referencedColumnName="id")
 	*/
 	protected $dancetype;
+	 /**
+     * @ORM\ManyToMany(targetEntity="Video")
+     * @ORM\JoinTable(name="user_video",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="video_id", referencedColumnName="id")}
+     * )
+     *
+     * @var ArrayCollection $userVideo
+     */
+    protected $userVideo;
 
     /**
      * Get id

@@ -50,6 +50,16 @@ class User implements UserInterface
 	* @ORM\JoinColumn(name="dancetype_id", referencedColumnName="id")
 	*/
 	protected $dancetype;
+	 /**
+     * @ORM\ManyToMany(targetEntity="Video")
+     * @ORM\JoinTable(name="user_video",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="video_id", referencedColumnName="id")}
+     * )
+     *
+     * @var ArrayCollection $userVideo
+     */
+    protected $userVideo;
 
     /**
      * Get id
@@ -257,5 +267,25 @@ class User implements UserInterface
     public function getDancetype()
     {
         return $this->dancetype;
+    }
+
+    /**
+     * Add userVideo
+     *
+     * @param Project\DataBundle\Entity\Video $userVideo
+     */
+    public function addVideo(\Project\DataBundle\Entity\Video $userVideo)
+    {
+        $this->userVideo[] = $userVideo;
+    }
+
+    /**
+     * Get userVideo
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUserVideo()
+    {
+        return $this->userVideo;
     }
 }

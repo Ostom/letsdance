@@ -1,5 +1,4 @@
 <?php
-// src/Project/DataBundle/Entity/Users.php
 namespace Project\DataBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
 * @ORM\Entity
 */
-class Dancetype
+class Video
 {
 	/**
 	* @ORM\Id
@@ -25,11 +24,18 @@ class Dancetype
 	*/
 	protected $info;
 	/**
-	* @ORM\OneToMany(targetEntity="User", mappedBy="dancetype")
+	* @ORM\Column(type="string", length="255")
 	*/
-	protected $user;
-	
-	
+	protected $pass;
+	/**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="userVideo")
+     */
+    private $users;
+    public function __construct()
+    {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -80,30 +86,43 @@ class Dancetype
         return $this->info;
     }
 
-   
-  
-    public function __construct()
-    {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
     /**
-     * Add user
+     * Set pass
      *
-     * @param Project\DataBundle\Entity\User $user
+     * @param string $pass
      */
-    public function addUser(\Project\DataBundle\Entity\User $user)
+    public function setPass($pass)
     {
-        $this->user[] = $user;
+        $this->pass = $pass;
     }
 
     /**
-     * Get user
+     * Get pass
+     *
+     * @return string 
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * Add users
+     *
+     * @param Project\DataBundle\Entity\User $users
+     */
+    public function addUser(\Project\DataBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+    }
+
+    /**
+     * Get users
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getUser()
+    public function getUsers()
     {
-        return $this->user;
+        return $this->users;
     }
 }

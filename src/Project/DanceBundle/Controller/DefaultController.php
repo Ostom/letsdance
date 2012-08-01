@@ -34,7 +34,7 @@ class DefaultController extends Controller
 		$patch = $user->getImg();
 		$patch = str_replace( '\\', '/', $patch);
 		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
-        echo($patch);
+        //echo($patch);
         return array('user' => $user, 'img' => $patch );//get(SecurityContext::LAST_USERNAME));
     }
     

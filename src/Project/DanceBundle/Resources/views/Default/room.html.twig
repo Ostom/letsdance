@@ -10,6 +10,11 @@
 		Hello {{ user.getUsername() }} !
 		<br/>
 		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!
+		<br/>
+		your favorite videos:
+		{% for video in user.getUserVideo() %}
+			<iframe width="560" height="315" src="{{ video.getPass() }}" frameborder="0" allowfullscreen></iframe>
+		{% endfor %}
 	</h1>
 {% endblock %}
 
