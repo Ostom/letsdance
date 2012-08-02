@@ -1,0 +1,14 @@
+<script language = "javascript">
+	function HUI(a,b){
+		document.getElementById(a).innerHTML = '<iframe width="560" height="315" src="'+b+'" frameborder="0" allowfullscreen></iframe>';		
+	} 
+</script>
+<a href = "{{ path('root')}}youtube ">Add new video</a>
+{% for v in video %}
+	{{ v.getTitle() }} <br/>
+	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Показать</div>
+	
+	<div id = "{{v.getId()}}"></div>
+	<a href = "{{ path('main') }}/videolist/{{v.getId()}}">Добавить</a>
+	<br/>
+{% endfor %}

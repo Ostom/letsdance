@@ -133,11 +133,27 @@ class DefaultController extends Controller
      */
 	public function youtubeAction(){
 		$responce = '';
+		
 		if(isset($_REQUEST['path']))
 		{			
-			$video = new Tube;
-			$path = $video->Get($_REQUEST['path']);
-			$responce = $video->Generate($path);
+			$em = $this->getDoctrine()->getEntityManager();	
+			
+			$tube = new Tube;
+			$path = $tube->Get($_REQUEST['path']);
+			$responce = $tube->Generate($path);
+			
+			$video = new Video;
+			$video->setTitle('new');
+			$video->setPass($responce);
+			$em->persist($video);
+			$em->flush();
+			
+			$c = $this->container->get('security.context')->getToken()->getUser();
+			$em = $this->getDoctrine()->getEntityManager();
+			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+			$user->addVideo($video);
+			$em->persist($user);
+			$em->flush();
 		}
 		return array( 'video' => $responce );
 	}

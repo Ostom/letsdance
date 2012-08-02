@@ -1,0 +1,16 @@
+<script language = "javascript">
+	function HUI(a,b){
+		document.getElementById(a).innerHTML = '<iframe width="560" height="315" src="'+b+'" frameborder="0" allowfullscreen></iframe>';		
+	} 
+</script>
+{% set i = 0 %}
+
+{% for v in video %}
+	{{ v.getTitle() }} <br/>
+	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Показать</div>
+	
+	<div id = "{{v.getId()}}"></div>
+	<a href = "{{ path('main') }}/rmvideolist/{{i}}">Добавить</a>
+	{% set i = i+1 %}
+	<br/>
+{% endfor %}
