@@ -6,12 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Project\DataBundle\Entity\User;
+use Project\DataBundle\Entity\Video;
 use Project\DataBundle\Entity\Dancetype;
 use Symfony\Component\HttpFoundation\Request;
 
 require_once getcwd().'/letsdance/static/php/upload.php';
+require_once getcwd().'/letsdance/static/php/youtube.php';
 use Project\DataBundle\Module\FormCheck;
+use Project\DataBundle\Module\Tube;
 
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -78,17 +82,9 @@ class DefaultController extends Controller
 			if (( $title != '') && ( $info != ''))
 			{
 				$dance = new Dancetype;
-				
 				$dance->setTitle($title);
 				$dance->setInfo($info);
-				
 				$em = $this->getDoctrine()->getEntityManager();
-				//$user1 = $em->getRepository('ProjectDataBundle:User')->findOneByUsername('den');
-				//$user2 = $em->getRepository('ProjectDataBundle:User')->findOneByUsername('user');
-				//$dance->addUser($user1);
-				//$dance->addUser($user2);		
-				//$dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
-				//$us = $dance->getUsers();
 				$responce = $dance -> getTitle();
 				$em->persist($dance);
 				$em->flush();
@@ -97,26 +93,81 @@ class DefaultController extends Controller
 		}
 		return array('dance' => $responce);
 	}
-	 /**
+	/**
      * @Route("/isdance")
-     * @Template()
      */
     public function isdanceAction(){
 		$em = $this->getDoctrine()->getEntityManager();
-		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername('hhh');
-		$a = $user->getDancetype();
-		echo($a->getTitle());
-		return array('dance' => $a);
-	}
-	/**
-     * @Route("/isuser")
-     * @Template()
-     */
-    public function isuserAction(){
-		$em = $this->getDoctrine()->getEntityManager();
 		$dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
 		$a = $dance->getUser();
-		//echo($a[0]);
-		return array('dance' => $a);
+		//$x=true;
+		//$a->isDirty($x);
+		echo(//$dance->getTitle());
+		$a->get(0)->getUsername());
+		return new Response();//$this->render('ProjectDataBundle:Default:youtube.html.twig');
 	}
+	
+	 /**
+     * @Route("/video/")
+     * @Template()
+     */
+     
+    public function videoAction()
+    {       
+        $em = $this->getDoctrine()->getEntityManager();	
+        
+		$user = $em->getRepository('ProjectDataBundle:User')->find(1);
+		
+		$video = $em->getRepository('ProjectDataBundle:Video')->find(1);
+        $tube = new Tube;
+        $video->setPass($tube->Generate($video->getPass()));
+        $video->addUser($user);
+       		
+		$em->persist($video);
+		$em->flush();
+        return new Response();
+    }
+	 /**
+     * @Route("/youtube")
+     * @Template()
+     */
+	public function youtubeAction(){
+		$responce = '';
+		
+		if(isset($_REQUEST['path']))
+		{			
+			$em = $this->getDoctrine()->getEntityManager();	
+			
+			$tube = new Tube;
+			$path = $tube->Get($_REQUEST['path']);
+			$responce = $tube->Generate($path);
+			
+			$video = new Video;
+			$video->setTitle('new');
+			$video->setPass($responce);
+			$em->persist($video);
+			$em->flush();
+			
+			$c = $this->container->get('security.context')->getToken()->getUser();
+			$em = $this->getDoctrine()->getEntityManager();
+			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+			$user->addVideo($video);
+			$em->persist($user);
+			$em->flush();
+		}
+		return array( 'video' => $responce );
+	}
+	/**
+     * @Route("/help")
+     * @Template()
+     */
+     public function helpAction(){
+		 $em = $this->getDoctrine()->getEntityManager();	
+		 $user = $em->getRepository('ProjectDataBundle:User')->find(1);
+		 $dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
+		 $user->setDancetype($dance);
+		 $em->persist($user);
+		 $em->flush();
+		 return new Response();
+	 }
 }

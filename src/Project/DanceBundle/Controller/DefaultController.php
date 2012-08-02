@@ -34,8 +34,48 @@ class DefaultController extends Controller
 		$patch = $user->getImg();
 		$patch = str_replace( '\\', '/', $patch);
 		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
-        echo($patch);
+        //echo($patch);
         return array('user' => $user, 'img' => $patch );//get(SecurityContext::LAST_USERNAME));
+    }
+    /**
+     * @Route("/videolist/{name}")
+     * @Route("/videolist/")
+     * @Template()
+     */
+    public function videolistAction($name = Null)
+    {       
+		$em = $this->getDoctrine()->getEntityManager();
+		$video = $em->getRepository('ProjectDataBundle:Video')->findAll();
+		
+		if ($name){
+			$c = $this->container->get('security.context')->getToken()->getUser();
+			$em = $this->getDoctrine()->getEntityManager();
+			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+			$video1 = $em->getRepository('ProjectDataBundle:Video')->find($name);
+			$user->addVideo($video1);
+			$em->persist($user);
+			$em->flush();
+		}
+		return array('video' => $video);
+    }
+    /**
+     * @Route("/rmvideolist/{name}")
+     * @Route("/rmvideolist/")
+     * @Template()
+     */
+    public function rmvideolistAction($name = Null)
+    {       
+		$em = $this->getDoctrine()->getEntityManager();
+		$c = $this->container->get('security.context')->getToken()->getUser();
+		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+		$video = $user->getUserVideo();
+		echo($video[0]->getTitle());
+		if ($name){
+			unset($video[$name]);
+			$em->persist($user);
+			$em->flush();
+		}
+		return array('video' => $video);
     }
     
     /**

@@ -8,8 +8,24 @@
 	<img src = "{{ img }}"/>
 	<h1>
 		Hello {{ user.getUsername() }} !
-		<br/>
-		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!
 	</h1>
+		<br/>
+		<table><tr>
+			<td>
+				Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!
+				<br/>
+			</td>
+			<td>
+				your favorite videos:
+				{% for video in user.getUserVideo() %}
+					<iframe width="320" height="155" src="{{ video.getPass() }}" frameborder="0" allowfullscreen></iframe>
+				{% endfor %}
+				<br/><a href ="{{ path('main') }}/rmvideolist/" >Remove items from video list</a>
+				<br/><a href ="{{ path('main') }}/videolist/" >Add items from video list </a>
+			</td>
+		</tr></table>
+		
+		
+	
 {% endblock %}
 
