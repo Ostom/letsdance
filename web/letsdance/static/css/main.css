@@ -8,3 +8,9 @@ a {
 a:hover{
 	color: red;
 }
+table{
+	text-align: top;
+}
+table td{
+	text-align: top;
+}

@@ -106,27 +106,6 @@ class DefaultController extends Controller
 		$a->get(0)->getUsername());
 		return new Response();//$this->render('ProjectDataBundle:Default:youtube.html.twig');
 	}
-	
-	 /**
-     * @Route("/video/")
-     * @Template()
-     */
-     
-    public function videoAction()
-    {       
-        $em = $this->getDoctrine()->getEntityManager();	
-        
-		$user = $em->getRepository('ProjectDataBundle:User')->find(1);
-		
-		$video = $em->getRepository('ProjectDataBundle:Video')->find(1);
-        $tube = new Tube;
-        $video->setPass($tube->Generate($video->getPass()));
-        $video->addUser($user);
-       		
-		$em->persist($video);
-		$em->flush();
-        return new Response();
-    }
 	 /**
      * @Route("/youtube")
      * @Template()
