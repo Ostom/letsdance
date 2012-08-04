@@ -6,9 +6,9 @@
 <a href = "{{ path('root')}}youtube ">Add new video</a>
 {% for v in video %}
 	{{ v.getTitle() }} <br/>
-	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Показать</div>
+	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Show</div>
 	
 	<div id = "{{v.getId()}}"></div>
-	<a href = "{{ path('main') }}/videolist/{{v.getId()}}">Добавить</a>
+	<a href = "{{ path('main') }}/videolist/{{v.getId()}}">Add</a>
 	<br/>
 {% endfor %}

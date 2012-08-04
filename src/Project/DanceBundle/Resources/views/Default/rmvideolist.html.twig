@@ -7,10 +7,10 @@
 
 {% for v in video %}
 	{{ v.getTitle() }} <br/>
-	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Показать</div>
+	<div onclick="HUI({{v.getId()}},'{{v.getPass()}}');">Show</div>
 	
 	<div id = "{{v.getId()}}"></div>
-	<a href = "{{ path('main') }}/rmvideolist/{{i}}">Добавить</a>
+	<a href = "{{ path('main') }}/rmvideolist/{{i}}">Delete</a>
 	{% set i = i+1 %}
 	<br/>
 {% endfor %}
