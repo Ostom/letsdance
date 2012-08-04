@@ -14,10 +14,10 @@
 				<br/>
 			</td>
 			<td>
-				your favorite videos:
-				{% for video in user.getUserVideo() %}
+				{% if user.getUserVideo() is defined %}your favorite videos:
+				<br>{% for video in user.getUserVideo() %}
 					<iframe width="260" height="155" src="{{ video.getPass() }}" frameborder="0" allowfullscreen></iframe>
-				{% endfor %}
+				<br>{% endfor %}{% endif %}
 				<br/><a href ="{{ path('main') }}/rmvideolist/" >Remove items from video list</a>
 				<br/><a href ="{{ path('main') }}/videolist/" >Add items from video list </a>
 			</td>
