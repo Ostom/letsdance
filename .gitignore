@@ -3,4 +3,5 @@
 /app/cache/*
 /app/logs/*
 /vendor/
+/web/letsdance/static/files/*
 /app/config/parameters.yml
