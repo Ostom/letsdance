@@ -6,14 +6,17 @@
 <div>{{ name }}</div>
 
 
-<form action="{{ path('register') }} " method="post" enctype="multipart/form-data">
-	<label for="username">Username:</label>
+<form action="{{ path('root') }}registration{% if change == 'change' %}/change{% endif %}" method="post" enctype="multipart/form-data">
+	<label for="username">Username*:</label>
 	<input type="text" id="username" name="_username" />
-	<label for="password">Password:</label>
+	<label for="password">Password*:</label>
 	<input type="password" id="password" name="_password" />
     <input type="file" name="filename"><br/> 
-    
-    <label for="username">Dacetypes:</label><br/>
+    About yo some info:<br/>
+    <textarea name="info"></textarea><br/>
+    ICQ: <input type="text" name = "icq"/><br/>
+    Skype:<input type="text" name="skype"/><br/>
+    <label for="username">Dacetypes*:</label><br/>
 	{% for type in dancetypes %}
 		<input type="radio"  name="_typedance"  value = "{{ type.getId() }}" /> {{ type.getTitle() }}<br/>
 	{% endfor %}

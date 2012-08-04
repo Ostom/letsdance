@@ -20,53 +20,70 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/registration")
+     * @Route("/registration/{change}")
+     * @Route("/registration/")
      * @Template()
      */
-    public function registrationAction()
-    {
+    public function registrationAction($change = 'nochange'){
 		$name= '';
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
 				
-		if(isset($_REQUEST['_username']))
-		{
-			
-			$request = Request::createFromGlobals();		
-			$request->getPathInfo();		
-			
-			$id_dancetype = $_POST['_typedance'];
-			$name = $request->request->get('_username');
-			$pass = $request->request->get('_password');
-			
-			// is Empty
-			if (($pass == '')||($name == '') ) return array('name'=>'Fill the gaps');		
-			
-			$a = new FormCheck();
-			$user = new User();
-			//file
-			if($_FILES['filename']['name'] != '')
-				{$ka = $a->uploadFile(); $user->setImg($ka);}
-			else{ $user->setImg(getcwd().'/letsdance/static/files/'.'default.png'); }
-			 
-			$user->setUsername($name);
-			//password
-			$factory = $this->get('security.encoder_factory');
-			$encoder = $factory->getEncoder($user);
-			$password = $encoder->encodePassword($pass, $user->getSalt());
-			$user->setPassword($password);
-			
-			$user->setRoles(array('ROLE_USER'));
-			
-			//Set Dance type
-			$dancetype = $em->getRepository('ProjectDataBundle:Dancetype')->find($id_dancetype);
-			$user->setDancetype($dancetype);
-					
-			// Sync with database
-			$em->persist($user);
-			$em->flush();
-		}
-        return array('name' => $name, 'dancetypes' => $dancetypes);
+			if(isset($_REQUEST['_username']))
+			{
+				$request = Request::createFromGlobals();		
+				$request->getPathInfo();		
+				if(isset($_POST['_typedance']))
+					$id_dancetype = $_POST['_typedance'];
+				$name = $request->request->get('_username');
+				$pass = $request->request->get('_password');
+				
+				if($change == 'change'){
+					$c = $this->container->get('security.context')->getToken()->getUser();
+					$em = $this->getDoctrine()->getEntityManager();
+					$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+				}
+				else {
+					$user = new User();
+				}
+				
+				// is Empty
+				if ($change == 'nochange'){
+					if (($pass == '')||($name == '') ) return array('name'=>'Fill the gaps', 'dancetypes'=> dancetypes);		
+					$user->setUsername($name);
+					//password
+					$factory = $this->get('security.encoder_factory');
+					$encoder = $factory->getEncoder($user);
+					$password = $encoder->encodePassword($pass, $user->getSalt());
+					$user->setPassword($password);
+				}
+				$a = new FormCheck();
+				
+				
+				//file
+				if($_FILES['filename']['name'] != '')
+					{$ka = $a->uploadFile(); $user->setImg($ka);}
+				else{ $user->setImg(getcwd().'/letsdance/static/files/'.'default.png'); }
+				 
+				
+				
+				$user->setRoles(array('ROLE_USER'));
+				
+				//Set Dance type
+				if(isset($_POST['_typedance'])){
+					$dancetype = $em->getRepository('ProjectDataBundle:Dancetype')->find($id_dancetype);
+					$user->setDancetype($dancetype);
+				}
+				//Set unnessesary info
+				if(isset($_REQUEST['icq']))$user->setIcq($_REQUEST['icq']);
+				if(isset($_REQUEST['skype']))$user->setSkype($_REQUEST['skype']);
+				if(isset($_REQUEST['info']))$user->setInfo($_REQUEST['info']);
+				
+				// Sync with database
+				$em->persist($user);
+				$em->flush();
+			}       
+        return array('name' => $name, 'dancetypes' => $dancetypes, 'change' => $change);
     }
     
     /**
