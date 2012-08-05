@@ -75,7 +75,7 @@ class DefaultController extends Controller
 				else{
 					if($_FILES['filename']['name'] != '')
 						{$ka = $a->uploadFile('user',$last_user_id + 1); $user->setImg($ka);}
-					else{ $user->setImg(getcwd().'/letsdance/static/files/'.'default.png'); }
+					else{ $user->setImg(getcwd().'/letsdance/media/img/'.'default.png'); }
 				}
 				$user->setRoles(array('ROLE_USER'));
 				
