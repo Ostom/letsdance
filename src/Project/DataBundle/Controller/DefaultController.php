@@ -21,16 +21,17 @@ class DefaultController extends Controller
 {
     /**
      * @Route("/registration/{change}")
-     * @Route("/registration/")
+     * @Route("/registration")
      * @Template()
      */
     public function registrationAction($change = 'nochange'){
-		$name= '';
+		$name= 'hui';
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
 				
 			if(isset($_REQUEST['_username']))
 			{
+				//$name='1';
 				$request = Request::createFromGlobals();		
 				$request->getPathInfo();		
 				if(isset($_POST['_typedance']))
@@ -44,11 +45,17 @@ class DefaultController extends Controller
 					$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 				}
 				else {
+					$em = $this->getDoctrine()->getEntityManager();
+					$query = $em->createQuery(
+					'SELECT Max(u.id) FROM ProjectDataBundle:User u'
+					); 
+					$pr = $query->getResult();
+					$last_user_id = $pr[0][1]; 		
 					$user = new User();
 				}
 				
-				// is Empty
-				if ($change == 'nochange'){
+				// User Pass - is not Empty
+				if ($change != 'change'){
 					if (($pass == '')||($name == '') ) return array('name'=>'Fill the gaps', 'dancetypes'=> dancetypes);		
 					$user->setUsername($name);
 					//password
@@ -57,16 +64,19 @@ class DefaultController extends Controller
 					$password = $encoder->encodePassword($pass, $user->getSalt());
 					$user->setPassword($password);
 				}
-				$a = new FormCheck();
-				
 				
 				//file
-				if($_FILES['filename']['name'] != '')
-					{$ka = $a->uploadFile(); $user->setImg($ka);}
-				else{ $user->setImg(getcwd().'/letsdance/static/files/'.'default.png'); }
-				 
 				
-				
+				$a = new FormCheck();
+				if($change == 'change'){
+					if($_FILES['filename']['name'] != '')
+						{$ka = $a->uploadFile('user',$user->getId()); $user->setImg($ka);}
+				}
+				else{
+					if($_FILES['filename']['name'] != '')
+						{$ka = $a->uploadFile('user',$last_user_id + 1); $user->setImg($ka);}
+					else{ $user->setImg(getcwd().'/letsdance/static/files/'.'default.png'); }
+				}
 				$user->setRoles(array('ROLE_USER'));
 				
 				//Set Dance type
@@ -158,12 +168,13 @@ class DefaultController extends Controller
      * @Template()
      */
      public function helpAction(){
-		 $em = $this->getDoctrine()->getEntityManager();	
-		 $user = $em->getRepository('ProjectDataBundle:User')->find(1);
-		 $dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
-		 $user->setDancetype($dance);
-		 $em->persist($user);
-		 $em->flush();
+		 $em = $this->getDoctrine()->getEntityManager();
+					$query = $em->createQuery(
+					'SELECT Max(u.id) FROM ProjectDataBundle:User u'
+					); 
+					$pr = $query->getResult();
+					$last_user_id = $pr[0][1]; 
+					
 		 return new Response();
 	 }
 }
