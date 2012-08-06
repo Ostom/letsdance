@@ -1,0 +1,27 @@
+<table><tr><td>
+	{% if imgs is defined %}
+		{% for img in imgs %}
+			<div style = "display:inline-block">
+				{{ img.getTitle() }} <br/>
+				<img width = "150px" src="{{ img.getPass() }}" /> 
+				<br/>
+				{{ img.getInfo() }}
+			</div>
+		{% endfor %}
+	{% endif %}
+
+	<form action="{{ path('root') }}album/{{id}}" method="post" enctype="multipart/form-data">
+		Title:
+		<input type="text" name="title" />
+		<br/>
+		Info: <br/>
+		
+		<textarea name="info" > </textarea>
+		<br/>
+		
+		<input type="file" name="filename"><br/> 
+		
+		<input type = "submit" />
+		
+	</form>
+</td></tr></table>

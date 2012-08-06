@@ -61,6 +61,10 @@ class User implements UserInterface, \Serializable
      * @var ArrayCollection $userVideo
      */
     protected $userVideo;
+    /**
+     * @ORM\ManyToMany(targetEntity="Gallery", mappedBy="galleryUser")
+     */
+    private $galleryUser;
 
     /**
      * Get id
@@ -301,4 +305,24 @@ class User implements UserInterface, \Serializable
    public function __sleep(){
     return array('id', 'username', 'password'); // add your own fields
 }
+
+    /**
+     * Add galleryUser
+     *
+     * @param Project\DataBundle\Entity\Gallery $galleryUser
+     */
+    public function addGallery(\Project\DataBundle\Entity\Gallery $galleryUser)
+    {
+        $this->galleryUser[] = $galleryUser;
+    }
+
+    /**
+     * Get galleryUser
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getGalleryUser()
+    {
+        return $this->galleryUser;
+    }
 }

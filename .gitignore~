@@ -4,5 +4,4 @@
 /app/logs/*
 /vendor/
 /web/letsdance/static/files/*
-/web/letsdance/media/img/*
 /app/config/parameters.yml

@@ -28,6 +28,18 @@ class Gallery
      * @ORM\ManyToMany(targetEntity="Img", mappedBy="imgGallery")
      */
     private $imgGallery;
+    
+     /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="gallery_user",
+     *     joinColumns={@ORM\JoinColumn(name="gallery_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
+     *
+     * @var ArrayCollection $galleryUser
+     */
+    protected $galleryUser;
+    
     public function __construct()
     {
         $this->imgGallery = new \Doctrine\Common\Collections\ArrayCollection();
@@ -101,5 +113,25 @@ class Gallery
     public function getImgGallery()
     {
         return $this->imgGallery;
+    }
+
+    /**
+     * Add galleryUser
+     *
+     * @param Project\DataBundle\Entity\User $galleryUser
+     */
+    public function addUser(\Project\DataBundle\Entity\User $galleryUser)
+    {
+        $this->galleryUser[] = $galleryUser;
+    }
+
+    /**
+     * Get galleryUser
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getGalleryUser()
+    {
+        return $this->galleryUser;
     }
 }

@@ -29,6 +29,19 @@
 		<a href="{{path('main')}}/rmvideolist/">Remove items from video list</a>
 		<br><a href="{{path('main')}}/videolist/">Add items from video list
 		</a>
+		<br/>
+		Your albums:
+		<br/>
+		{% if user.getGalleryUser() is defined %}
+		{% for album in user.getGalleryUser() %}
+			<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
+			<br/>
+			{% if album.getImgGallery()[0] is defined %}
+				<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
+			{% endif %}
+			<br/>
+		{% endfor %}{% endif %}
+		<a href="{{path('root')}}/albums/">Albums list</a>
 	</div>
 {% endblock %}
 

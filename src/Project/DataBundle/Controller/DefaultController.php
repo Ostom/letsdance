@@ -28,7 +28,7 @@ class DefaultController extends Controller
      * @Template()
      */
     public function registrationAction($change = 'nochange'){
-		$name= 'hui';
+		//$name= 'hui';
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
 				
@@ -43,12 +43,14 @@ class DefaultController extends Controller
 				$pass = $request->request->get('_password');
 				
 				if($change == 'change'){
+					// Get user from session
 					$c = $this->container->get('security.context')->getToken()->getUser();
 					$em = $this->getDoctrine()->getEntityManager();
 					$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 				}
 				else {
 					$em = $this->getDoctrine()->getEntityManager();
+					// Get last user's id
 					$query = $em->createQuery(
 					'SELECT Max(u.id) FROM ProjectDataBundle:User u'
 					); 
@@ -129,7 +131,7 @@ class DefaultController extends Controller
 						$user->setImg($Img);
 					}
 				}
-								
+				// end of set image... Oo i think it can be solved easly....				
 				$user->setRoles(array('ROLE_USER'));
 				
 				//Set Dance type
@@ -148,6 +150,86 @@ class DefaultController extends Controller
 			}       
         return array('name' => $name, 'dancetypes' => $dancetypes, 'change' => $change);
     }
+    
+    /**
+     * @Route("/albums")
+     * @Template()
+     */
+    public function albumsAction(){
+		//Template at the start list of your albums(need to create users oneToMany albom or give the acces for users) and you 
+		// can choose the albom and redakt it 
+		// or switch a button "create" and create a new albom
+		$em = $this->getDoctrine()->getEntityManager();
+		$c = $this->container->get('security.context')->getToken()->getUser();
+		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+		
+		$Albums = $user -> getGalleryUser();		
+		if (isset($_REQUEST['create'])){
+			if($_REQUEST['create'] == true){
+				//Add the new albom
+				$Gallery = new Gallery;
+				$Gallery->setTitle($_REQUEST['title']);
+				if (isset($_REQUEST['info'])) $Gallery->setInfo($_REQUEST['info']);
+				$Gallery->addUser($user);
+				$em->persist($Gallery);
+				$em->flush();
+			}
+			else if ($_REQUEST['create'] == false){
+				//Add the photo
+				$Check = new FormCheck();
+				$Img = new Img;
+				$Gallery = $em->getRepository('ProjectDataBundle:Gallery')->find($_REQUEST['id']);
+				if($_FILES['filename']['name'] != ''){
+					$im_pass = $Check->uploadFile($Gallery->getTitle(),$Gallery->getId()); 							
+					$Img->setPass($im_pass);
+					$em->persist($Img);
+					$em->flush();
+				}
+				$Gallery->addImg($img);
+			}
+			echo($_REQUEST['create'] );
+		}
+		//echo($_REQUEST['create'] );
+		return array('albums' => $Albums);
+	}
+	
+	 /**
+     * @Route("/album/{id}")
+     * @Template()
+     */
+    public function albumAction($id){
+		//Template at the start list of your albums(need to create users oneToMany albom or give the acces for users) and you 
+		// can choose the albom and redakt it 
+		// or switch a button "create" and create a new albom
+		$em = $this->getDoctrine()->getEntityManager();	
+		$Gallery = $em->getRepository('ProjectDataBundle:Gallery')->find($id);
+		$Imgs = $Gallery->getImgGallery();
+		//echo ($Imgs[2]->getId());
+		//Add the photo
+		$Check = new FormCheck();
+		if (isset($_FILES['filename']))
+		if($_FILES['filename']['name'] != ''){
+			// last img id
+			$query = $em->createQuery('SELECT Max(u.id) FROM ProjectDataBundle:Img u'); 
+			$pr = $query->getResult();
+			$last_img_id = $pr[0][1];
+			// new object 
+			$Img = new Img;		
+			$im_pass = $Check->uploadFile($Gallery->getTitle(),$last_img_id + 1); 							
+			$Img->setTitle($_REQUEST['title']);
+			if (isset($_REQUEST['info'])) $Img->setInfo($_REQUEST['info']);
+			// the right view
+			$patch = str_replace( '\\', '/', $im_pass);
+			$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
+			// set img
+			$Img->setPass($patch);			
+			$Img->addGallery($Gallery);
+			$em->persist($Img);
+			$em->flush();
+		}
+		return array('imgs' => $Imgs, 'id'=>$id);
+	}
+	
     
     /**
      * @Route("/admin/newdance")

@@ -1,0 +1,25 @@
+<table><tr><td>
+	{% if albums is defined %}
+		{% for album in albums %}
+			<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
+			<br/>
+			{% if album.getImgGallery()[0] is defined %}
+			<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
+			{% endif %}
+			<br/>
+		{% endfor %}
+	{% endif %}
+</td><td>
+	<form action="{{ path('root') }}albums " method="post">
+		Title:
+		<input type="text" name="title" />
+		<br/>
+		Info: <br/>
+		<textarea name="info" > </textarea>
+		<br/>
+		<input type = "radio" name = "create" /> create new album
+		
+		<input type = "submit" />
+		
+	</form>
+</td></tr></table>
