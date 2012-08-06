@@ -1,0 +1,31 @@
+<?php
+namespace Project\DataBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+* @ORM\Entity
+*/
+class Gallery
+{
+	/**
+	* @ORM\Id
+	* @ORM\Column(type="integer")
+	* @ORM\GeneratedValue(strategy="AUTO")
+	*/
+	protected $id;
+	/**
+	* @ORM\Column(type="string", length="255")
+	*/
+	protected $title;
+	
+	/**
+	* @ORM\Column(type="text", nullable="true")
+	*/
+	protected $info;
+	
+	/**
+     * @ORM\ManyToMany(targetEntity="Img", mappedBy="imgGallery")
+     */
+    private $imgGallery;
+}

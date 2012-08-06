@@ -34,7 +34,8 @@ class User implements UserInterface
 	*/
 	protected $info;
 	/**
-	* @ORM\Column(type="string", length="255", nullable="true")
+	* @ORM\OneToOne(targetEntity="Img")
+	* @ORM\JoinColumn(name="img_id", referencedColumnName="id")
 	*/
 	protected $img;
 	/**

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
 * @ORM\Entity
 */
-class Gallery
+class Img
 {
 	/**
 	* @ORM\Id
@@ -15,7 +15,7 @@ class Gallery
 	*/
 	protected $id;
 	/**
-	* @ORM\Column(type="string", length="255")
+	* @ORM\Column(type="string", nullable="true", length="255")
 	*/
 	protected $title;
 	
@@ -23,11 +23,29 @@ class Gallery
 	* @ORM\Column(type="text", nullable="true")
 	*/
 	protected $info;
-	
 	/**
-     * @ORM\ManyToMany(targetEntity="Img", mappedBy="imgGallery")
+	* @ORM\Column(type="string", length="255")
+	*/
+	protected $pass;
+
+	/**
+     * @ORM\OneToOne(targetEntity="User")
+     * 
      */
-    private $imgGallery;
+    private $user;
+    
+     /**
+     * @ORM\ManyToMany(targetEntity="Gallery")
+     * @ORM\JoinTable(name="img_gallery",
+     *     joinColumns={@ORM\JoinColumn(name="img_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="gallery_id", referencedColumnName="id")}
+     * )
+     *
+     * @var ArrayCollection $imgGallery
+     */
+    protected $imgGallery;
+    
+  
     public function __construct()
     {
         $this->imgGallery = new \Doctrine\Common\Collections\ArrayCollection();
@@ -84,11 +102,51 @@ class Gallery
     }
 
     /**
+     * Set pass
+     *
+     * @param string $pass
+     */
+    public function setPass($pass)
+    {
+        $this->pass = $pass;
+    }
+
+    /**
+     * Get pass
+     *
+     * @return string 
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * Set user
+     *
+     * @param Project\DataBundle\Entity\User $user
+     */
+    public function setUser(\Project\DataBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return Project\DataBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * Add imgGallery
      *
-     * @param Project\DataBundle\Entity\Img $imgGallery
+     * @param Project\DataBundle\Entity\Gallery $imgGallery
      */
-    public function addImg(\Project\DataBundle\Entity\Img $imgGallery)
+    public function addGallery(\Project\DataBundle\Entity\Gallery $imgGallery)
     {
         $this->imgGallery[] = $imgGallery;
     }

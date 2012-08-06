@@ -34,7 +34,8 @@ class User implements UserInterface
 	*/
 	protected $info;
 	/**
-	* @ORM\Column(type="string", length="255", nullable="true")
+	* @ORM\OneToOne(targetEntity="Img")
+	* @ORM\JoinColumn(name="img_id", referencedColumnName="id")
 	*/
 	protected $img;
 	/**
@@ -267,5 +268,25 @@ class User implements UserInterface
     public function getDancetype()
     {
         return $this->dancetype;
+    }
+
+    /**
+     * Add userVideo
+     *
+     * @param Project\DataBundle\Entity\Video $userVideo
+     */
+    public function addVideo(\Project\DataBundle\Entity\Video $userVideo)
+    {
+        $this->userVideo[] = $userVideo;
+    }
+
+    /**
+     * Get userVideo
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUserVideo()
+    {
+        return $this->userVideo;
     }
 }

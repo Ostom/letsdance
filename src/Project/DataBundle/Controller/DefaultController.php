@@ -8,6 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Project\DataBundle\Entity\User;
 use Project\DataBundle\Entity\Video;
 use Project\DataBundle\Entity\Dancetype;
+use Project\DataBundle\Entity\Img;
+use Project\DataBundle\Entity\Gallery;
+
 use Symfony\Component\HttpFoundation\Request;
 
 require_once getcwd().'/letsdance/static/php/upload.php';
@@ -19,6 +22,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+    public function imgGalleryUserAdd($Img,$user,$Gallery, $ka = 'default'){
+		if ($ka == 'default') $ka = getcwd().'/letsdance/media/img/'.'default.png';
+		$Img->setPass($ka);
+		$user->setImg($Img);
+		if($Gallery){
+			 $Gallery->addImg($Img);
+		} 
+		else {
+			$Gallery = new Gallery; $Gallery->setTitle('user');
+			$Gallery->addImg($Img);echo ('not ok<br/>');
+		}
+		$user->setImg($ka);
+	}
     /**
      * @Route("/registration/{change}")
      * @Route("/registration")
@@ -65,17 +81,38 @@ class DefaultController extends Controller
 					$user->setPassword($password);
 				}
 				
-				//file
+				// Image for User to Gallery 
 				
-				$a = new FormCheck();
+				$Check = new FormCheck();
+				$Img = new Img;
+				$Gallery = $em->getRepository('ProjectDataBundle:Gallery')->findOneByTitle('user');
 				if($change == 'change'){
-					if($_FILES['filename']['name'] != '')
-						{$ka = $a->uploadFile('user',$user->getId()); $user->setImg($ka);}
+					if($_FILES['filename']['name'] != ''){
+							$ka = $Check->uploadFile('user',$user->getId()); 							
+							$Img->setPass($ka);$user->setImg($Img);
+							if($Gallery){ $Gallery->addImg($Img);} 
+							else {
+								$Gallery = new Gallery; 
+								$Gallery->setTitle('user');
+								$Gallery->addImg($Img);
+								$em->persist($Img);
+								$em->flush();
+								$em->persist($Gallery);
+								$em->flush();
+								echo ('not ok<br/>');
+							}
+							$user->setImg($Img);
+					}
 				}
 				else{
-					if($_FILES['filename']['name'] != '')
-						{$ka = $a->uploadFile('user',$last_user_id + 1); $user->setImg($ka);}
-					else{ $user->setImg(getcwd().'/letsdance/media/img/'.'default.png'); }
+					if($_FILES['filename']['name'] != ''){
+						$ka = $Check->uploadFile('user',$last_user_id + 1);
+						
+						$this->imgGalleryUserAdd($Img,$user,$Gallery,$ka);
+					}
+					else{
+						imgGalleryUserAdd($Imb,$user,$Gallery);
+					}
 				}
 				$user->setRoles(array('ROLE_USER'));
 				
@@ -169,11 +206,10 @@ class DefaultController extends Controller
      */
      public function helpAction(){
 		 $em = $this->getDoctrine()->getEntityManager();
-					$query = $em->createQuery(
-					'SELECT Max(u.id) FROM ProjectDataBundle:User u'
-					); 
-					$pr = $query->getResult();
-					$last_user_id = $pr[0][1]; 
+		 $Gallery = $em->getRepository('ProjectDataBundle:Gallery')->findOneByTitle('user');
+		 if($Gallery){ echo('ok<br/>');} else {echo ('not ok<br/>');}
+		 $user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername('den');
+		 if($user){ echo('ok<br/>');} else {echo ('not ok<br/>');}
 					
 		 return new Response();
 	 }
