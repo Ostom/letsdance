@@ -45,7 +45,7 @@ class DefaultController extends Controller
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
 				
-			if(isset($_REQUEST['_username']))
+		if(isset($_REQUEST['_username']))
 			{
 				//$name='1';
 				$request = Request::createFromGlobals();		
@@ -71,16 +71,20 @@ class DefaultController extends Controller
 				}
 				
 				// User Pass - is not Empty
+				
 				if ($change != 'change'){
 					if (($pass == '')||($name == '') ) return array('name'=>'Fill the gaps', 'dancetypes'=> dancetypes);		
 					$user->setUsername($name);
 					//password
+					
 					$factory = $this->get('security.encoder_factory');
 					$encoder = $factory->getEncoder($user);
+					
 					$password = $encoder->encodePassword($pass, $user->getSalt());
+					
 					$user->setPassword($password);
+					echo ('hui');
 				}
-				
 				// Image for User to Gallery 
 				
 				$Check = new FormCheck();
@@ -89,7 +93,7 @@ class DefaultController extends Controller
 				if($change == 'change'){
 					if($_FILES['filename']['name'] != ''){
 							$ka = $Check->uploadFile('user',$user->getId()); 							
-							$Img->setPass($ka);$user->setImg($Img);
+							$Img->setPass($ka);//$user->setImg($Img);
 							if($Gallery){ $Gallery->addImg($Img);} 
 							else {
 								$Gallery = new Gallery; 
@@ -106,9 +110,19 @@ class DefaultController extends Controller
 				}
 				else{
 					if($_FILES['filename']['name'] != ''){
-						$ka = $Check->uploadFile('user',$last_user_id + 1);
-						
-						$this->imgGalleryUserAdd($Img,$user,$Gallery,$ka);
+						$ka = $Check->uploadFile('user',$last_user_id + 1);						
+						$Img->setPass($ka);
+						$em->persist($Img);
+						$em->flush();
+						//$user->setImg($Img);
+							if($Gallery){ $Gallery->addImg($Img);} 
+							else {
+								$Gallery = new Gallery; 
+								$Gallery->setTitle('user');
+								$Gallery->addImg($Img);
+								echo ('not ok<br/>');
+							}
+							$user->setImg($Img);
 					}
 					else{
 						imgGalleryUserAdd($Imb,$user,$Gallery);
