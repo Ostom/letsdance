@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
 * @ORM\Entity
 */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
 	/**
 	* @ORM\Id
@@ -289,4 +289,16 @@ class User implements UserInterface
     {
         return $this->userVideo;
     }
+   public function serialize()
+   {
+      return serialize($this->id);
+   }
+
+   public function unserialize($data)
+   {
+      $this->id = unserialize($data);
+   }
+   public function __sleep(){
+    return array('id', 'username', 'password'); // add your own fields
+}
 }
