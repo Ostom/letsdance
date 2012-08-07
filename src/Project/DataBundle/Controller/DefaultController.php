@@ -9,6 +9,8 @@ use Project\DataBundle\Entity\User;
 use Project\DataBundle\Entity\Video;
 use Project\DataBundle\Entity\Img;
 use Project\DataBundle\Entity\Gallery;
+use Project\DataBundle\Entity\News;
+
 
 use Project\DataBundle\Entity\Dancetype;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,12 +31,13 @@ class DefaultController extends Controller
      */
     public function registrationAction($change = 'nochange'){
 		//$name= 'hui';
+		$name='';
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
 				
 			if(isset($_REQUEST['_username']))
 			{
-				//$name='1';
+				
 				$request = Request::createFromGlobals();		
 				$request->getPathInfo();		
 				if(isset($_POST['_typedance']))
@@ -229,8 +232,7 @@ class DefaultController extends Controller
 		}
 		return array('imgs' => $Imgs, 'id'=>$id);
 	}
-	
-    
+
     /**
      * @Route("/admin/newdance")
      * @Template()
@@ -255,6 +257,40 @@ class DefaultController extends Controller
 		}
 		return array('dance' => $responce);
 	}
+	
+	
+    /**
+     * @Route("/createnews")
+     * @Template()
+     */
+    public function createnewsAction(){
+		$responce = '';
+		//Get user and news list
+			$em = $this->getDoctrine()->getEntityManager();
+			$c = $this->container->get('security.context')->getToken()->getUser();
+			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+			$NewsList = $user -> getNews();
+		if(isset($_REQUEST['title']))
+		{
+			$title = $_REQUEST['title'];
+			$text = $_REQUEST['text'];
+			if (( $title != '') && ( $text != ''))
+			{
+				// Create News
+				$news = new News;
+				$news->setTitle($title);
+				$news->setText($text);
+				$news->setDate();
+				$news->setUser($user);
+				//$responce = $dance -> getTitle();
+				$em->persist($news);
+				$em->flush();
+			}
+						
+		}
+		return array('news' => $NewsList);
+	}
+	
 	/**
      * @Route("/isdance")
      */

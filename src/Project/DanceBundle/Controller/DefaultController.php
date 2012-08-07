@@ -35,8 +35,15 @@ class DefaultController extends Controller
 		//$patch = 'hui';
 		$patch = str_replace( '\\', '/', $patch);
 		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
-        //echo($patch);
-        return array('user' => $user, 'img' => $patch );//get(SecurityContext::LAST_USERNAME));
+        //Generate News
+        // Get The list of News by all Users from Type of dance? ordering by Date 
+		$query = $em->createQuery(
+		"SELECT u.username, n.title, n.text, n.date FROM ProjectDataBundle:News n JOIN n.user u JOIN u.dancetype d WHERE d.title = 'Balley' ORDER BY n.date DESC"
+		//'SELECT Max(u.id) FROM ProjectDataBundle:User u'
+		); 
+		$news = $query->getResult();
+		//$last_user_id = $pr[0][1]; 
+        return array('user' => $user, 'img' => $patch, 'news_list' => $news );//get(SecurityContext::LAST_USERNAME));
     }
     /**
      * @Route("/videolist/{name}")

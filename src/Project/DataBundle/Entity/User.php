@@ -65,6 +65,13 @@ class User implements UserInterface, \Serializable
      * @ORM\ManyToMany(targetEntity="Gallery", mappedBy="galleryUser")
      */
     private $galleryUser;
+    
+    /**
+	* @ORM\OneToMany(targetEntity="News", mappedBy="user")
+	*/
+	protected $news;
+	
+    
 
     /**
      * Get id
@@ -324,5 +331,27 @@ class User implements UserInterface, \Serializable
     public function getGalleryUser()
     {
         return $this->galleryUser;
+    }
+
+   
+
+    /**
+     * Add news
+     *
+     * @param Project\DataBundle\Entity\News $news
+     */
+    public function addNews(\Project\DataBundle\Entity\News $news)
+    {
+        $this->news[] = $news;
+    }
+
+    /**
+     * Get news
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getNews()
+    {
+        return $this->news;
     }
 }

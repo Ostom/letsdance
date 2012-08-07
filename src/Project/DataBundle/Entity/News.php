@@ -1,0 +1,129 @@
+<?php
+namespace Project\DataBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+* @ORM\Entity
+*/
+class News
+{
+	/**
+	* @ORM\Id
+	* @ORM\Column(type="integer")
+	* @ORM\GeneratedValue(strategy="AUTO")
+	*/
+	protected $id;
+	/**
+	* @ORM\Column(type="string", nullable="true", length="255")
+	*/
+	protected $title;
+	
+	/**
+	* @ORM\Column(type="text", nullable="true")
+	*/
+	protected $text;
+	/**
+	* @ORM\Column(type="datetime")
+	*/
+	protected $date;
+
+	/**
+	* @ORM\ManyToOne(targetEntity="User", inversedBy="news")
+	* @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	*/
+    private $user;
+   
+    
+  
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set text
+     *
+     * @param text $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * Get text
+     *
+     * @return text 
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * Set date
+     *
+     * @param datetime $date
+     */
+    public function setDate()
+    {
+        // WILL be saved in the database
+        $this->date = new \DateTime("now");
+    }
+
+    /**
+     * Get date
+     *
+     * @return datetime 
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set user
+     *
+     * @param Project\DataBundle\Entity\User $user
+     */
+    public function setUser(\Project\DataBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return Project\DataBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+}

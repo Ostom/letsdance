@@ -1,0 +1,19 @@
+<table><tr><td>
+	{% if news is defined %}
+		{% for item in news %}
+			{{ item.getTitle() }}
+			<br/>
+		{% endfor %}
+	{% endif %}
+</td><td>
+	<form action="{{ path('root') }}createnews " method="post">
+		Title:
+		<input type="text" name="title" />
+		<br/>
+		Info: <br/>
+		<textarea name="text" > </textarea>
+		
+		<input type = "submit" />
+		
+	</form>
+</td></tr></table>
