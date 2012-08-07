@@ -31,6 +31,12 @@ class Video
      * @ORM\ManyToMany(targetEntity="User", mappedBy="userVideo")
      */
     private $users;
+    
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="video")
+	*/
+	protected $comments;
+	
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();

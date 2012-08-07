@@ -45,6 +45,10 @@ class Img
      */
     protected $imgGallery;
     
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="img")
+	*/
+	protected $comments;
   
     public function __construct()
     {

@@ -31,6 +31,12 @@ class Video
      * @ORM\ManyToMany(targetEntity="User", mappedBy="userVideo")
      */
     private $users;
+    
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="video")
+	*/
+	protected $comments;
+	
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
@@ -124,5 +130,25 @@ class Video
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param Project\DataBundle\Entity\Comment $comments
+     */
+    public function addComment(\Project\DataBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

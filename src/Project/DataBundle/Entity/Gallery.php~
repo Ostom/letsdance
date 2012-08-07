@@ -40,6 +40,11 @@ class Gallery
      */
     protected $galleryUser;
     
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="gallery")
+	*/
+	protected $comments;
+    
     public function __construct()
     {
         $this->imgGallery = new \Doctrine\Common\Collections\ArrayCollection();

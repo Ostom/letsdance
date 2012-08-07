@@ -34,6 +34,10 @@ class News
 	*/
     private $user;
    
+   /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="news")
+	*/
+	protected $comments;
     
   
     /**
@@ -91,9 +95,10 @@ class News
      *
      * @param datetime $date
      */
-    public function setDate($date)
+    public function setDate()
     {
-        $this->date = $date;
+        // WILL be saved in the database
+        $this->date = new \DateTime("now");
     }
 
     /**

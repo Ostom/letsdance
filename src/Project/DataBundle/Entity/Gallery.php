@@ -40,6 +40,11 @@ class Gallery
      */
     protected $galleryUser;
     
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="gallery")
+	*/
+	protected $comments;
+    
     public function __construct()
     {
         $this->imgGallery = new \Doctrine\Common\Collections\ArrayCollection();
@@ -133,5 +138,25 @@ class Gallery
     public function getGalleryUser()
     {
         return $this->galleryUser;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param Project\DataBundle\Entity\Comment $comments
+     */
+    public function addComment(\Project\DataBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

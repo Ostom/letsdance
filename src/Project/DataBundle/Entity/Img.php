@@ -45,6 +45,10 @@ class Img
      */
     protected $imgGallery;
     
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="img")
+	*/
+	protected $comments;
   
     public function __construct()
     {
@@ -159,5 +163,25 @@ class Img
     public function getImgGallery()
     {
         return $this->imgGallery;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param Project\DataBundle\Entity\Comment $comments
+     */
+    public function addComment(\Project\DataBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

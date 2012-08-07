@@ -71,7 +71,10 @@ class User implements UserInterface, \Serializable
 	*/
 	protected $news;
 	
-    
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="user")
+	*/
+	protected $comments;
 
     /**
      * Get id

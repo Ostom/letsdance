@@ -10,7 +10,7 @@ use Project\DataBundle\Entity\Video;
 use Project\DataBundle\Entity\Img;
 use Project\DataBundle\Entity\Gallery;
 use Project\DataBundle\Entity\News;
-
+use Project\DataBundle\Entity\Comment;
 
 use Project\DataBundle\Entity\Dancetype;
 use Symfony\Component\HttpFoundation\Request;
@@ -294,6 +294,41 @@ class DefaultController extends Controller
 		}
 		return array('news' => $NewsList);
 	}
+	
+	/**
+     * @Route("/comment_news/{title}")
+     * @Template()
+     */
+    public function comment_newsAction($title1){
+		$responce = '';
+		//Get user and news list
+			$em = $this->getDoctrine()->getEntityManager();
+			$c = $this->container->get('security.context')->getToken()->getUser();
+			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+			$news = $em->getRepository('ProjectDataBundle:News')->find($title1);
+			$List = $news -> getComments();
+		if(isset($_REQUEST['title']))
+		{
+			$title = $_REQUEST['title'];
+			$text = $_REQUEST['text'];
+			if (( $title != '') && ( $text != ''))
+			{
+				// Create News
+				$com = new Comment;
+				$com->setTitle($title);
+				$com->setText($text);
+				$com->setDate();
+				$com->setUser($user);
+				$com->setNews($news);
+				//$responce = $dance -> getTitle();
+				$em->persist($com);
+				$em->flush();
+			}
+						
+		}
+		return array('coms' => $List, 'tit' => $title1);
+	}
+	
 	
 	/**
      * @Route("/isdance")

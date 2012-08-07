@@ -1,0 +1,19 @@
+<table><tr><td>
+	{% if coms is defined %}
+		{% for item in coms %}
+			{{ item.getTitle() }}
+			<br/>
+		{% endfor %}
+	{% endif %}
+</td><td>
+	<form action="{{ path('root') }}comment_news/{{tit}} " method="post">
+		Title:
+		<input type="text" name="title" />
+		<br/>
+		Info: <br/>
+		<textarea name="text" > </textarea>
+		
+		<input type = "submit" />
+		
+	</form>
+</td></tr></table>

@@ -71,7 +71,10 @@ class User implements UserInterface, \Serializable
 	*/
 	protected $news;
 	
-    
+    /**
+	* @ORM\OneToMany(targetEntity="Comment", mappedBy="user")
+	*/
+	protected $comments;
 
     /**
      * Get id
@@ -353,5 +356,25 @@ class User implements UserInterface, \Serializable
     public function getNews()
     {
         return $this->news;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param Project\DataBundle\Entity\Comment $comments
+     */
+    public function addComment(\Project\DataBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
