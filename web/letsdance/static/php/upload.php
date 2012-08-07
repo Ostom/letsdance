@@ -5,6 +5,7 @@ class FormCheck
 	public function uploadFile($pre_img_name,$num_img_name)
 	{
 		$uploaddir = getcwd().'/letsdance/media/img/';
+		$uploaddir = str_replace( '/', '\\', $uploaddir);
 		$fn = 'filename';
 		$name = $_FILES[$fn]['error'];
 		//echo($name);
