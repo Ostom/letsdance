@@ -4,7 +4,7 @@ class FormCheck
 {
 	public function uploadFile($pre_img_name,$num_img_name)
 	{
-		$uploaddir = getcwd().'/letsdance/media/img/';
+		$uploaddir = getcwd().'/letsdance/static/files/';
 		$fn = 'filename';
 		$name = $_FILES[$fn]['error'];
 		//echo($name);
