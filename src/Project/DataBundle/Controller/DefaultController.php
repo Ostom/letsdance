@@ -93,9 +93,13 @@ class DefaultController extends Controller
 							$Gallery = new Gallery; 
 							$Gallery->setTitle('user');
 							$Gallery->addImg($Img);
+							$em->persist($Gallery);
 							echo ('not ok<br/>');
 						}
 						$user->setImg($Img);
+						
+						$em->persist($Img);
+						$em->flush();
 					}
 				}
 				else{
