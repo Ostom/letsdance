@@ -49,7 +49,10 @@
 		<!-- Type of dance that user prefer and news that exists in this type of dance -->
 		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!<br/>
 		<!-- News -->
+		
 		<h2>News in the {{ user.getDancetype().getTitle() }} </h2>
+		<a href = "{{ path('root') }}createnews">Public your article </a>
+		
 		{% for news in news_list %}
 			{{ news.getUser().getUsername() }} ,<!-- HZ KAK --> date: {{ news.getTitle() }}<br/>
 			{{ news.getTitle() }}<br/>

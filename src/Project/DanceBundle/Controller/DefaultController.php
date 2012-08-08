@@ -15,8 +15,8 @@ class DefaultController extends Controller
      * @Route("/hello/")
      * @Template()
      */
-    public function indexAction($name = Null)
-    {
+    public function indexAction($name = Null){
+        //Something like a main page
         if ($name)
         return array('name' => $name);
         else 
@@ -26,55 +26,52 @@ class DefaultController extends Controller
      * @Route("/room/")
      * @Template()
      */
-    public function roomAction($name = Null)
-    {       
+    public function roomAction($name = Null){       
+		//room of User
+		//TODO: Make the div-block ( absolute position ) for edit all types of information 
 		$c = $this->container->get('security.context')->getToken()->getUser();
 		$em = $this->getDoctrine()->getEntityManager();
 		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
+		// It's only for testing this application on the windows machins
 		$patch = $user->getImg()->getPass();
-		//$patch = 'hui';
 		$patch = str_replace( '\\', '/', $patch);
 		$patch = str_replace($_SERVER['DOCUMENT_ROOT'], 'http://'.$_SERVER['HTTP_HOST'], $patch);
         //Generate News
-        // Get The list of News by all Users from Type of dance? ordering by Date 
+        
+        // Get The list of News by all Users from Type of dance and ordering by Date 
 		$query = $em->createQuery(
 		"SELECT n FROM ProjectDataBundle:News n JOIN n.user u JOIN u.dancetype d WHERE d.title = :dancetype ORDER BY n.date DESC"
-		//'SELECT Max(u.id) FROM ProjectDataBundle:User u'
 		)-> setParameter('dancetype', $user->getDancetype()->getTitle()); 
-		
 		$news = $query->getResult();
 		
-		//$last_user_id = $pr[0][1]; 
-        return array('user' => $user, 'img' => $patch, 'news_list' => $news );//get(SecurityContext::LAST_USERNAME));
+        return array('user' => $user, 'img' => $patch, 'news_list' => $news );
     }
+    
     /**
      * @Route("/videolist/{name}")
      * @Route("/videolist/")
      * @Template()
      */
-    public function videolistAction($name = Null)
-    {       
+    public function videolistAction($id = Null){       
+		// The panel for manage the user's video 
 		$em = $this->getDoctrine()->getEntityManager();
-		$video = $em->getRepository('ProjectDataBundle:Video')->findAll();
-		
-		if ($name){
+		$videos = $em->getRepository('ProjectDataBundle:Video')->findAll();
+		if ($id){
 			$c = $this->container->get('security.context')->getToken()->getUser();
-			$em = $this->getDoctrine()->getEntityManager();
 			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
-			$video1 = $em->getRepository('ProjectDataBundle:Video')->find($name);
-			$user->addVideo($video1);
+			$video = $em->getRepository('ProjectDataBundle:Video')->find($id);
+			$user->addVideo($video);
 			$em->persist($user);
 			$em->flush();
 		}
-		return array('video' => $video);
+		return array('video' => $videos);
     }
     /**
      * @Route("/rmvideolist/{name}")
      * @Route("/rmvideolist/")
      * @Template()
      */
-    public function rmvideolistAction($name = Null)
-    {       
+    public function rmvideolistAction($name = Null){       
 		$em = $this->getDoctrine()->getEntityManager();
 		$c = $this->container->get('security.context')->getToken()->getUser();
 		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
@@ -92,15 +89,15 @@ class DefaultController extends Controller
      * @Route("/login")
      * @Template()
      */
-	public function loginAction()
-	{
+	public function loginAction(){
 		$request = $this->getRequest();
 		$session = $request->getSession();
-			if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-			$error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-			} else {
-			$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-			}		
+			if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)){
+				$error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+			}
+			else{
+				$error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+			}
 		return array(
 		'last_username' => $session->get(SecurityContext::LAST_USERNAME),
 		'error'

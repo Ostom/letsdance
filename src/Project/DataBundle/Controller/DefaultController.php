@@ -30,7 +30,7 @@ class DefaultController extends Controller
      * @Template()
      */
     public function registrationAction($change = 'nochange'){
-		//$name= 'hui';
+		//It's a very big and confused action of registration users
 		$name='';
 		$em = $this->getDoctrine()->getEntityManager();			
 		$dancetypes = $em->getRepository('ProjectDataBundle:Dancetype')->findAll();
@@ -116,6 +116,8 @@ class DefaultController extends Controller
 							$Gallery = new Gallery; 
 							$Gallery->setTitle('user');
 							$Gallery->addImg($Img);
+							$em->persist($Gallery);
+							$em->flush();
 							echo ('not ok<br/>');
 						}
 						$user->setImg($Img);
@@ -133,6 +135,8 @@ class DefaultController extends Controller
 							$Gallery = new Gallery; 
 							$Gallery->setTitle('user');
 							$Gallery->addImg($Img);
+							$em->persist($Gallery);
+							$em->flush();
 							echo ('not ok<br/>');
 						}
 						$user->setImg($Img);
@@ -163,9 +167,8 @@ class DefaultController extends Controller
      * @Template()
      */
     public function albumsAction(){
-		//Template at the start list of your albums(need to create users oneToMany albom or give the acces for users) and you 
-		// can choose the albom and redakt it 
-		// or switch a button "create" and create a new albom
+		// This action give you a possibility to choose your album from your
+		// album list and connected with the next action
 		$em = $this->getDoctrine()->getEntityManager();
 		$c = $this->container->get('security.context')->getToken()->getUser();
 		$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
@@ -181,41 +184,17 @@ class DefaultController extends Controller
 				$em->persist($Gallery);
 				$em->flush();
 			}
-			else if ($_REQUEST['create'] == false){
-				//Add the photo
-				$Check = new FormCheck();
-				$Img = new Img;
-				$Gallery = $em->getRepository('ProjectDataBundle:Gallery')->find($_REQUEST['id']);
-				if($_FILES['filename']['name'] != ''){
-					$im_pass = $Check->uploadFile($Gallery->getTitle(),$Gallery->getId()); 							
-					$Img->setPass($im_pass);
-					$em->persist($Img);
-					$em->flush();
-				}
-				$Gallery->addImg($img);
-			}
-			echo($_REQUEST['create'] );
 		}
-		//echo($_REQUEST['create'] );
 		return array('albums' => $Albums);
 	}
 	
-	/**
-     * @Route("/obrabotka")
-     */
-     public function obrabotkaAction(){
-		if(isset($_REQUEST['name'])) echo ($_REQUEST['name']);
-		echo('no');
-		return new Response(); 
-	 }
 	 /**
      * @Route("/album/{id}")
      * @Template()
      */
     public function albumAction($id){
-		//Template at the start list of your albums(need to create users oneToMany albom or give the acces for users) and you 
-		// can choose the albom and redakt it 
-		// or switch a button "create" and create a new albom
+		// TODO: very difficult way to do more easly
+		// TODO: Possibility of giving the acces for other users, that owner's like
 		$em = $this->getDoctrine()->getEntityManager();	
 		$Gallery = $em->getRepository('ProjectDataBundle:Gallery')->find($id);
 		$Imgs = $Gallery->getImgGallery();
@@ -246,17 +225,26 @@ class DefaultController extends Controller
 	}
 
     /**
+     * @Route("/obrabotka")
+     */
+     public function obrabotkaAction(){
+		//The test action, can be deleted
+		if(isset($_REQUEST['name'])) echo ($_REQUEST['name']);
+		echo('no');
+		return new Response(); 
+	 }
+	 
+    /**
      * @Route("/admin/newdance")
      * @Template()
      */
     public function dancetypeAction(){
+		// Create a new type of dance
 		$responce = '';
-		if(isset($_REQUEST['title']))
-		{
+		if(isset($_REQUEST['title'])){
 			$title = $_REQUEST['title'];
 			$info = $_REQUEST['info'];
-			if (( $title != '') && ( $info != ''))
-			{
+			if (( $title != '') && ( $info != '')){
 				$dance = new Dancetype;
 				$dance->setTitle($title);
 				$dance->setInfo($info);
@@ -265,17 +253,16 @@ class DefaultController extends Controller
 				$em->persist($dance);
 				$em->flush();
 			}
-						
 		}
 		return array('dance' => $responce);
 	}
-	
 	
     /**
      * @Route("/createnews")
      * @Template()
      */
     public function createnewsAction(){
+		// TODO: It's must be changed for using through AJAX methods 
 		$responce = '';
 		//Get user and news list
 			$em = $this->getDoctrine()->getEntityManager();
@@ -294,7 +281,6 @@ class DefaultController extends Controller
 				$news->setText($text);
 				$news->setDate();
 				$news->setUser($user);
-				//$responce = $dance -> getTitle();
 				$em->persist($news);
 				$em->flush();
 			}
@@ -314,7 +300,6 @@ class DefaultController extends Controller
 			$c = $this->container->get('security.context')->getToken()->getUser();
 			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 			$news = $em->getRepository('ProjectDataBundle:News')->find($id);
-			//$List = $news -> getComments();
 		if(isset($_REQUEST['title']))
 		{
 			$title = $_REQUEST['title'];
@@ -328,52 +313,35 @@ class DefaultController extends Controller
 				$com->setDate();
 				$com->setUser($user);
 				$com->setNews($news);
-				//$responce = $dance -> getTitle();
 				$em->persist($com);
 				$em->flush();
-			}
-						
+			}		
 		}
 		return array('comment' => $com);
 	}
 	
-	
-	/**
-     * @Route("/isdance")
-     */
-    public function isdanceAction(){
-		$em = $this->getDoctrine()->getEntityManager();
-		$dance = $em->getRepository('ProjectDataBundle:Dancetype')->find(1);
-		$a = $dance->getUser();
-		//$x=true;
-		//$a->isDirty($x);
-		echo(//$dance->getTitle());
-		$a->get(0)->getUsername());
-		return new Response();//$this->render('ProjectDataBundle:Default:youtube.html.twig');
-	}
 	 /**
      * @Route("/youtube")
      * @Template()
      */
 	public function youtubeAction(){
+		// Add a new video
 		$responce = '';
-		
 		if(isset($_REQUEST['path']))
 		{			
 			$em = $this->getDoctrine()->getEntityManager();	
-			
+			// generate a path
 			$tube = new Tube;
 			$path = $tube->Get($_REQUEST['path']);
-			$responce = $tube->Generate($path);
-			
+			$path = $tube->Generate($path);
+			// create video entity
 			$video = new Video;
 			$video->setTitle('new');
-			$video->setPass($responce);
+			$video->setPass($path);
 			$em->persist($video);
 			$em->flush();
-			
+			// Add Video to user's video list
 			$c = $this->container->get('security.context')->getToken()->getUser();
-			$em = $this->getDoctrine()->getEntityManager();
 			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 			$user->addVideo($video);
 			$em->persist($user);
@@ -386,13 +354,8 @@ class DefaultController extends Controller
      * @Template()
      */
      public function helpAction(){
-		 $em = $this->getDoctrine()->getEntityManager();
-					$query = $em->createQuery(
-					'SELECT Max(u.id) FROM ProjectDataBundle:User u'
-					); 
-					$pr = $query->getResult();
-					$last_user_id = $pr[0][1]; 
-					
+		 // Action for testing any code
+		 
 		 return new Response();
 	 }
 }
