@@ -7,20 +7,8 @@
 {% block head %}
 	<script type="text/javascript" src="{{ asset('letsdance/static/javascript/jquery.js') }}"></script>
 	<script type="text/javascript">
-	
-	$(document).ready(function(){
-		$('#id').click(function(){
-			$.post("{{ path('root') }}obrabotka",{ name: 'Jon' },function(data){$('#id').html(data);}); 
-		});
-			//show();
-		})
-	
+	// AJAX function for comment every content	
 	function otprav(textarea, id, pass){
-		/*
-			new parametr, associated with path 
-			TODO: Case for it
-			and TODO: POST
-		*/
 		switch (pass) {
 			case 'news':
 				pass = "{{ path('root') }}comment_news/"+ id;
@@ -39,20 +27,15 @@
 				$(id_).html(data);
 			}
 		); 
-		
-		//$.post("{{ path('root') }}obrabotka",
-		//	{ text: textarea },
-		//	function(data){$('#'+id).html(data);});
 	}
-
 	</script>
 {% endblock %}
 
-{% block logo_src %}{{ img }} {% endblock %}
+{% block logo_src %}{{ img }}{% endblock %}
 
 {% block content %}
-	
 	<div style="display: inline-block; padding-left: 5px; vertical-align: top;text-align: left; width: 60%;">
+		<!-- Information about User -->
 		<h1> Hello {{ user.getUsername() }} !</h1>
 		<br/>
 		{% if user.getIcq() != '' %}
@@ -63,58 +46,50 @@
 		
 		{% if user.getInfo() != '' %}
 		About person: {{ user.getInfo() }} <br/> {% endif %}
-		
-		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!
-		<br/>
+		<!-- Type of dance that user prefer and news that exists in this type of dance -->
+		Your favorite dance type is {{ user.getDancetype().getTitle() }} and we will show you all news connected with it!<br/>
 		<!-- News -->
 		<h2>News in the {{ user.getDancetype().getTitle() }} </h2>
 		{% for news in news_list %}
-			{{ news.getUser().getUsername() }} ,<!-- HZ KAK --> date: {{ news.getTitle() }}
-			<br/>
-			{{ news.getTitle() }}
-			<br/>
-			{{ news.getText() }}
-			<br/>
+			{{ news.getUser().getUsername() }} ,<!-- HZ KAK --> date: {{ news.getTitle() }}<br/>
+			{{ news.getTitle() }}<br/>
+			{{ news.getText() }}<br/>
 			<hr/>
-			Comments:
-			<br/>
-			
+			<!-- comments for news-object -->
+			Comments:<br/>
 			{% for com in news.getComments() %}
 				{{ com.getText() }} <br/>
 			{% endfor %}
+			<!-- Area for leavig a new comment -->
 			<div id = 'news_comment_{{ news.getId() }}'></div>
 			<textarea id = '{{ news.getId() }}' name="text"></textarea>
 			<input type="button" onClick="text = getElementById('{{ news.getId() }}').value; id = {{ news.getId() }}; otprav(text, id, 'news');"
 			<a href = "{{path('root')}}comment_news/{{news.getId()}}" >Comment</a>
-			<hr/>
-			<br/>
-			
+			<hr/><br/>
 		{% endfor %}
 	</div>
 	<div style="display: inline-block; padding-left: 5px;text-align: right; width: 35%;">
 		<!-- Videos -->
 		{% if user.getUserVideo() is defined %}your favorite videos: <br>
-		{% for 	video in user.getUserVideo() %}
-		<iframe id="I1" allowfullscreen="" frameborder="0" height="155" name="I1" src="{{video.getPass()}}" width="260">
-		</iframe><br>
-		{% endfor %}{% endif %} <br>
+			{% for 	video in user.getUserVideo() %}
+				<iframe id="I1" allowfullscreen="" frameborder="0" height="155" name="I1" src="{{video.getPass()}}" width="260">
+				</iframe><br>
+			{% endfor %}
+		{% endif %} <br>
 		<a href="{{path('main')}}/rmvideolist/">Remove items from video list</a>
-		<br><a href="{{path('main')}}/videolist/">Add items from video list
-		</a>
-		<br/>
+		<br><a href="{{path('main')}}/videolist/">Add items from video list</a><br/>
 		<!-- Albums -->
-		Your albums:
-		<br/>
+		Your albums:<br/>
 		{% if user.getGalleryUser() is defined %}
-		{% for album in user.getGalleryUser() %}
-			<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
-			<br/>
-			{% if album.getImgGallery()[0] is defined %}
-				<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
-			{% endif %}
-			<br/>
-		{% endfor %}{% endif %}
+			{% for album in user.getGalleryUser() %}
+				<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
+				<br/>
+				{% if album.getImgGallery()[0] is defined %}
+					<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
+				{% endif %}
+				<br/>
+			{% endfor %}
+		{% endif %}
 		<a href="{{path('root')}}albums">Albums list</a>
 	</div>
 {% endblock %}
-
