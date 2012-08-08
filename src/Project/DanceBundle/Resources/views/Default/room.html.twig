@@ -3,9 +3,55 @@
 {% block title %}
 	Hello 	{{ user.getUsername()}} !
 {% endblock %}
+
+{% block head %}
+	<script type="text/javascript" src="{{ asset('letsdance/static/javascript/jquery.js') }}"></script>
+	<script type="text/javascript">
+	
+	$(document).ready(function(){
+		$('#id').click(function(){
+			$.post("{{ path('root') }}obrabotka",{ name: 'Jon' },function(data){$('#id').html(data);}); 
+		});
+			//show();
+		})
+	
+	function otprav(textarea, id, pass){
+		/*
+			new parametr, associated with path 
+			TODO: Case for it
+			and TODO: POST
+		*/
+		switch (pass) {
+			case 'news':
+				pass = "{{ path('root') }}comment_news/"+ id;
+				break
+			default:
+				pass = "{{ path('root') }}obrabotka"
+				break
+		}		
+		id_ = '#news_comment_' + id;
+		e = textarea + ' ' +  id;
+		alert(textarea + ' ' +  id);
+		$.post(
+			pass,
+			{ text: e, title: 'Comment' },
+			function(data){
+				$(id_).html(data);
+			}
+		); 
+		
+		//$.post("{{ path('root') }}obrabotka",
+		//	{ text: textarea },
+		//	function(data){$('#'+id).html(data);});
+	}
+
+	</script>
+{% endblock %}
+
 {% block logo_src %}{{ img }} {% endblock %}
 
 {% block content %}
+	
 	<div style="display: inline-block; padding-left: 5px; vertical-align: top;text-align: left; width: 60%;">
 		<h1> Hello {{ user.getUsername() }} !</h1>
 		<br/>
@@ -36,6 +82,9 @@
 			{% for com in news.getComments() %}
 				{{ com.getText() }} <br/>
 			{% endfor %}
+			<div id = 'news_comment_{{ news.getId() }}'></div>
+			<textarea id = '{{ news.getId() }}' name="text"></textarea>
+			<input type="button" onClick="text = getElementById('{{ news.getId() }}').value; id = {{ news.getId() }}; otprav(text, id, 'news');"
 			<a href = "{{path('root')}}comment_news/{{news.getId()}}" >Comment</a>
 			<hr/>
 			<br/>

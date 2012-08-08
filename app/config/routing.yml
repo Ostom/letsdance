@@ -12,7 +12,8 @@ main:
     pattern: /dance
 root:
     pattern: /
-    
+obr:
+    pattern: /obrabotka
 login:
     pattern: /login
     type:     annotation

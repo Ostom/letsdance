@@ -200,6 +200,14 @@ class DefaultController extends Controller
 		return array('albums' => $Albums);
 	}
 	
+	/**
+     * @Route("/obrabotka")
+     */
+     public function obrabotkaAction(){
+		if(isset($_REQUEST['name'])) echo ($_REQUEST['name']);
+		echo('no');
+		return new Response(); 
+	 }
 	 /**
      * @Route("/album/{id}")
      * @Template()
@@ -296,17 +304,17 @@ class DefaultController extends Controller
 	}
 	
 	/**
-     * @Route("/comment_news/{title}")
+     * @Route("/comment_news/{id}")
      * @Template()
      */
-    public function comment_newsAction($title1){
+    public function comment_newsAction($id){
 		$responce = '';
 		//Get user and news list
 			$em = $this->getDoctrine()->getEntityManager();
 			$c = $this->container->get('security.context')->getToken()->getUser();
 			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
-			$news = $em->getRepository('ProjectDataBundle:News')->find($title1);
-			$List = $news -> getComments();
+			$news = $em->getRepository('ProjectDataBundle:News')->find($id);
+			//$List = $news -> getComments();
 		if(isset($_REQUEST['title']))
 		{
 			$title = $_REQUEST['title'];
@@ -326,7 +334,7 @@ class DefaultController extends Controller
 			}
 						
 		}
-		return array('coms' => $List, 'tit' => $title1);
+		return array('comment' => $com);
 	}
 	
 	
