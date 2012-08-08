@@ -48,7 +48,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * @Route("/videolist/{name}")
+     * @Route("/videolist/{id}")
      * @Route("/videolist/")
      * @Template()
      */
@@ -57,6 +57,7 @@ class DefaultController extends Controller
 		$em = $this->getDoctrine()->getEntityManager();
 		$videos = $em->getRepository('ProjectDataBundle:Video')->findAll();
 		if ($id){
+			$em = $this->getDoctrine()->getEntityManager();
 			$c = $this->container->get('security.context')->getToken()->getUser();
 			$user = $em->getRepository('ProjectDataBundle:User')->findOneByUsername($c->getUsername());
 			$video = $em->getRepository('ProjectDataBundle:Video')->find($id);
