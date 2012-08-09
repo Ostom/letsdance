@@ -326,7 +326,7 @@ class DefaultController extends Controller
      */
 	public function youtubeAction(){
 		// Add a new video
-		$responce = '';
+		$path = '';
 		if(isset($_REQUEST['path']))
 		{			
 			$em = $this->getDoctrine()->getEntityManager();	
@@ -347,7 +347,7 @@ class DefaultController extends Controller
 			$em->persist($user);
 			$em->flush();
 		}
-		return array( 'video' => $responce );
+		return array( 'video' => $path );
 	}
 	/**
      * @Route("/help")

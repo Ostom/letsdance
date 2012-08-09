@@ -34,7 +34,23 @@
 {% block logo_src %}{{ img }}{% endblock %}
 
 {% block content %}
-	<div style="display: inline-block; padding-left: 5px; vertical-align: top;text-align: left; width: 60%;">
+	
+	<div style = "display: inline-block; padding-left: 0px; vertical-align: top;text-align: left;width: 160px;">
+		<!-- Albums -->
+		Your albums:<br/>
+		{% if user.getGalleryUser() is defined %}
+			{% for album in user.getGalleryUser() %}
+				<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
+				<br/>
+				{% if album.getImgGallery()[0] is defined %}
+					<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
+				{% endif %}
+				<br/>
+			{% endfor %}
+		{% endif %}
+		<a href="{{path('root')}}albums">Albums list</a>
+	</div>
+	<div style="display: inline-block; padding-left: 5px; vertical-align: top;text-align: left; width: 40%;">
 		<!-- Information about User -->
 		<h1> Hello {{ user.getUsername() }} !</h1>
 		<br/>
@@ -51,10 +67,10 @@
 		<!-- News -->
 		
 		<h2>News in the {{ user.getDancetype().getTitle() }} </h2>
-		<a href = "{{ path('root') }}createnews">Public your article </a>
+		<a href = "{{ path('root') }}createnews">Public your article </a><br/>
 		
 		{% for news in news_list %}
-			{{ news.getUser().getUsername() }} ,<!-- HZ KAK --> date: {{ news.getTitle() }}<br/>
+			{{ news.getUser().getUsername() }} ,<!-- HZ KAK --> date: {{ news.getDate()|date("m/d/Y") }}<br/>
 			{{ news.getTitle() }}<br/>
 			{{ news.getText() }}<br/>
 			<hr/>
@@ -71,7 +87,7 @@
 			<hr/><br/>
 		{% endfor %}
 	</div>
-	<div style="display: inline-block; padding-left: 5px;text-align: right; width: 35%;">
+	<div style="display: inline-block; padding-left: 5px;text-align: right; width: 30%;">
 		<!-- Videos -->
 		{% if user.getUserVideo() is defined %}your favorite videos: <br>
 			{% for 	video in user.getUserVideo() %}
@@ -81,18 +97,6 @@
 		{% endif %} <br>
 		<a href="{{path('main')}}/rmvideolist/">Remove items from video list</a>
 		<br><a href="{{path('main')}}/videolist/">Add items from video list</a><br/>
-		<!-- Albums -->
-		Your albums:<br/>
-		{% if user.getGalleryUser() is defined %}
-			{% for album in user.getGalleryUser() %}
-				<a href = "{{ path('root') }}album/{{album.getId()}}">{{ album.getTitle() }}</a>
-				<br/>
-				{% if album.getImgGallery()[0] is defined %}
-					<img width = "150px" src = "{{ album.getImgGallery()[0].getPass() }}" />
-				{% endif %}
-				<br/>
-			{% endfor %}
-		{% endif %}
-		<a href="{{path('root')}}albums">Albums list</a>
+		
 	</div>
 {% endblock %}

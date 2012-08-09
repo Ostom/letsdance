@@ -3,6 +3,7 @@
 		document.getElementById(a).innerHTML = '<iframe width="560" height="315" src="'+b+'" frameborder="0" allowfullscreen></iframe>';		
 	} 
 </script>
+
 <a href = "{{ path('root')}}youtube ">Add new video</a>
 {% for v in video %}
 	{{ v.getTitle() }} <br/>
@@ -12,3 +13,4 @@
 	<a href = "{{ path('main') }}/videolist/{{v.getId()}}">Add</a>
 	<br/>
 {% endfor %}
+
